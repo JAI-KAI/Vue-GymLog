@@ -9,6 +9,6 @@
 <script setup lang="ts">
 import PartButton from '@/components/PartButton.vue';
 
-const parts = ['胸', '背', '腿', '功能']
+const parts = ['chest', 'back', 'legs', 'function']
 
 </script>
