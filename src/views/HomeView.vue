@@ -4,9 +4,11 @@
         <p class="text-gray-400 text-sm mt-1">選一個部位開始紀錄</p>
     </header>
     <PartButton :parts="parts"/>
+    <BackupButton/>
 </template>
 
 <script setup lang="ts">
+import BackupButton from '@/components/BackupButton.vue';
 import PartButton from '@/components/PartButton.vue';
 
 const parts = [
