@@ -1,11 +1,11 @@
 <template>
-    <div class="flex-1 flex flex-col p-4">
+    <div class="flex-1 flex flex-col">
         <header class="flex items-center justify-between mb-6">
             <div class="flex items-center">
                 <button @click="goBack()" class="p-2 text-blue-500">
                     <span class="icon-[pixel--arrow-left-solid] text-2xl text-blue-500 align-middle"></span>
                 </button>
-                <h2 id="categoryTitle" class="text-2xl font-bold ml-2">{{ part }}</h2>
+                <h2 id="categoryTitle" class="text-2xl font-bold ml-2">{{ currentLabel }}</h2>
             </div>
             <button v-show="editingId" id="cancelEditBtn" @click="resetForm()"
                 class="text-xs bg-gray-700 px-3 py-1 rounded-full text-gray-300">取消編輯</button>
@@ -71,24 +71,33 @@ import { useRoute, useRouter } from 'vue-router';
 
 const route = useRoute()
 const router = useRouter()
-const part: string = (route.params.parts as string) ?? 'default'
 
+// 取得部位顯示
+const part: string = route.params.parts as string
+const categoryMap: Record<string, string> = {
+  chest: '胸部訓練',
+  back: '背部訓練',
+  legs: '腿部訓練',
+  function: '功能性/核心訓練'
+}
+const currentLabel = categoryMap[part] || '未知部位'
+
+//返回
 const goBack = () => {
     router.push('/')
 }
-
 
 // input area
 const exerciseInput = ref('')
 const weightInput = ref()
 const unit = ref('kg')
 const editingId = ref<number | null>(null) // 追蹤目前正在編輯哪一筆
-const records = ref<GymRecord[]>(JSON.parse(localStorage.getItem('gym_records') ?? '[]'))
 const submitBtn = computed(() =>
     editingId.value ? '更新重量紀錄' : '新增這組紀錄'
 )
 
 //渲染資料
+const records = ref<GymRecord[]>(JSON.parse(localStorage.getItem('gym_records') ?? '[]'))
 const filtered = computed(() =>
     records.value.filter(r => r.category == part)
 )
