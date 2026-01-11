@@ -23,6 +23,8 @@ TypeScript cannot handle type information for `.vue` imports by default, so we r
 
 See [Vite Configuration Reference](https://vite.dev/config/).
 
+## Demo:  [vue-gym-log](https://vue-gym-log.vercel.app/)
+
 ## Project Setup
 
 ```sh
