@@ -3,12 +3,13 @@
         <header class="flex items-center justify-between mb-6">
             <div class="flex items-center">
                 <button @click="goBack()" class="p-2 text-blue-500">
-                    <span class="icon-[pixel--arrow-left-solid] text-2xl text-blue-500 align-middle"></span>
+                    <span
+                        class="icon-[pixel--arrow-left-solid] text-2xl text-blue-500 align-middle active:scale-95 transition duration-150"></span>
                 </button>
                 <h2 id="categoryTitle" class="text-2xl font-bold ml-2">{{ currentLabel }}</h2>
             </div>
             <button v-show="editingId" id="cancelEditBtn" @click="resetForm()"
-                class="text-xs bg-gray-700 px-3 py-1 rounded-full text-gray-300">取消編輯</button>
+                class="text-xs bg-gray-700 px-3 py-1 rounded-full text-gray-300 active:scale-95 transition duration-150">取消編輯</button>
         </header>
 
         <div class="p-4 rounded-xl mb-6 border border-t-2 border-blue-500">
@@ -24,7 +25,7 @@
                     </select>
                 </div>
                 <button id="submitBtn" @click="saveRecord()"
-                    class="w-full active:bg-blue-700 text-white font-bold py-3 rounded-lg transition active:scale-95"
+                    class="w-full active:bg-blue-700 text-white font-bold py-3 rounded-lg transition active:scale-95 duration-150"
                     :class="editingId ? 'bg-green-600' : 'bg-blue-500'">{{ submitBtn }}</button>
             </div>
         </div>
@@ -75,16 +76,18 @@ const router = useRouter()
 // 取得部位顯示
 const part: string = route.params.parts as string
 const categoryMap: Record<string, string> = {
-  chest: '胸部訓練',
-  back: '背部訓練',
-  legs: '腿部訓練',
-  function: '功能性/核心訓練'
+    chest: '胸部訓練',
+    back: '背部訓練',
+    legs: '腿部訓練',
+    function: '功能性/核心訓練'
 }
 const currentLabel = categoryMap[part] || '未知部位'
 
 //返回
 const goBack = () => {
-    router.push('/')
+    setTimeout(() => {
+        router.push('/')
+    }, 150);
 }
 
 // input area
@@ -112,46 +115,50 @@ interface GymRecord {
 }
 
 const saveRecord = () => {
-    const now = new Date();
-    if (!exerciseInput.value || isNaN(weightInput.value)) {
-        alert('請填寫完整動作與重量');
-        return;
-    }
+    setTimeout(() => {
+        const now = new Date();
+        if (!exerciseInput.value || isNaN(weightInput.value)) {
+            alert('請填寫完整動作與重量');
+            return;
+        }
 
-    let kg: number, lb: number;
-    if (unit.value === 'kg') {
-        kg = +(weightInput.value.toFixed(1));
-        lb = +(weightInput.value * 2.20462).toFixed(1);
-    } else {
-        lb = +(weightInput.value.toFixed(1));
-        kg = +(weightInput.value / 2.20462).toFixed(1);
-    }
+        let kg: number, lb: number;
+        if (unit.value === 'kg') {
+            kg = +(weightInput.value.toFixed(1));
+            lb = +(weightInput.value * 2.20462).toFixed(1);
+        } else {
+            lb = +(weightInput.value.toFixed(1));
+            kg = +(weightInput.value / 2.20462).toFixed(1);
+        }
 
-    if (editingId.value) {
-        // 更新模式
-        records.value = records.value.map(r => r.id === editingId.value ? { ...r, name: exerciseInput.value, kg, lb, date: `${now.getMonth() + 1}/${now.getDate()}` } : r);
-        editingId.value = null;
-    } else {
-        // 新增模式
-        const newRecord = {
-            id: Date.now(),
-            category: part,
-            name: exerciseInput.value,
-            kg: kg,
-            lb: lb,
-            date: `${now.getMonth() + 1}/${now.getDate()}`
-        };
-        records.value.push(newRecord);
-    }
+        if (editingId.value) {
+            // 更新模式
+            records.value = records.value.map(r => r.id === editingId.value ? { ...r, name: exerciseInput.value, kg, lb, date: `${now.getMonth() + 1}/${now.getDate()}` } : r);
+            editingId.value = null;
+        } else {
+            // 新增模式
+            const newRecord = {
+                id: Date.now(),
+                category: part,
+                name: exerciseInput.value,
+                kg: kg,
+                lb: lb,
+                date: `${now.getMonth() + 1}/${now.getDate()}`
+            };
+            records.value.push(newRecord);
+        }
 
-    localStorage.setItem('gym_records', JSON.stringify(records.value));
-    resetForm();
+        localStorage.setItem('gym_records', JSON.stringify(records.value));
+        resetForm();
+    }, 150);
 }
 
 const resetForm = () => {
-    exerciseInput.value = ''
-    weightInput.value = null
-    editingId.value = null
+    setTimeout(() => {
+        exerciseInput.value = ''
+        weightInput.value = null
+        editingId.value = null
+    }, 150);
 }
 
 // 編輯 刪除
