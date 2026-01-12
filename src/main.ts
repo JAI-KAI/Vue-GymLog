@@ -10,3 +10,5 @@ app.use(createPinia())
 app.use(router)
 
 app.mount('#app')
+
+document.addEventListener('touchstart', () => {}, {passive: true})
