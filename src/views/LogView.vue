@@ -41,7 +41,7 @@
                     <div class="flex-1">
                         <div class="flex items-center gap-2">
                             <h4 class="font-bold text-lg text-white">{{ r.name }}</h4>
-                            <span class="text-xs text-gray-500 font-mono bg-gray-800 px-1 rounded">{{ r.date }}</span>
+                            <span class="text-xs text-gray-500 font-mono bg-gray-800 px-1 rounded">{{ r.updatedAt }}</span>
                         </div>
                         <div class="flex gap-4 mt-1">
                             <span class="text-cyan-400 font-bold">{{ r.kg }} <small
@@ -73,7 +73,7 @@ import { useRoute, useRouter } from 'vue-router';
 const route = useRoute()
 const router = useRouter()
 
-// 取得部位顯示
+// 取得部位顯示轉換中文
 const part: string = route.params.parts as string
 const categoryMap: Record<string, string> = {
     chest: '胸部訓練',
@@ -95,14 +95,15 @@ const exerciseInput = ref('')
 const weightInput = ref()
 const unit = ref('kg')
 const editingId = ref<number | null>(null) // 追蹤目前正在編輯哪一筆
-const submitBtn = computed(() =>
-    editingId.value ? '更新重量紀錄' : '新增這組紀錄'
-)
+const submitBtn = computed(() => editingId.value ? '更新重量紀錄' : '新增這組紀錄' )
 
 //渲染資料
 const records = ref<GymRecord[]>(JSON.parse(localStorage.getItem('gym_records') ?? '[]'))
 const filtered = computed(() =>
-    records.value.filter(r => r.category == part)
+    [...records.value] 
+    .filter(r => r.category == part)
+    .sort((a, b) => b.updatedAt - a.updatedAt)
+    .map(r =>  ({...r, updatedAt: formatTimestamp(r.updatedAt)}))
 )
 
 interface GymRecord {
@@ -111,12 +112,19 @@ interface GymRecord {
     name: string;
     kg: number;
     lb: number;
-    date: string;
+    updatedAt: number;
+}
+
+const formatTimestamp = (ts: number) => {
+  return new Intl.DateTimeFormat('zh-TW', {
+    month: 'numeric',
+    day: 'numeric'
+  }).format(ts); // 產出 "1/12" 日期格式
 }
 
 const saveRecord = () => {
     setTimeout(() => {
-        const now = new Date();
+        const updatedAt = Date.now();
         if (!exerciseInput.value || isNaN(weightInput.value)) {
             alert('請填寫完整動作與重量');
             return;
@@ -133,7 +141,7 @@ const saveRecord = () => {
 
         if (editingId.value) {
             // 更新模式
-            records.value = records.value.map(r => r.id === editingId.value ? { ...r, name: exerciseInput.value, kg, lb, date: `${now.getMonth() + 1}/${now.getDate()}` } : r);
+            records.value = records.value.map(r => r.id === editingId.value ? { ...r, name: exerciseInput.value, kg, lb, updatedAt } : r);
             editingId.value = null;
         } else {
             // 新增模式
@@ -141,9 +149,9 @@ const saveRecord = () => {
                 id: Date.now(),
                 category: part,
                 name: exerciseInput.value,
-                kg: kg,
-                lb: lb,
-                date: `${now.getMonth() + 1}/${now.getDate()}`
+                kg,
+                lb,
+                updatedAt
             };
             records.value.push(newRecord);
         }
@@ -181,7 +189,5 @@ const deleteRecord = (id: number) => {
     }
 
 }
-
-
 
 </script>
