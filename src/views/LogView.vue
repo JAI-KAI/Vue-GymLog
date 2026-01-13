@@ -41,7 +41,8 @@
                     <div class="flex-1">
                         <div class="flex items-center gap-2">
                             <h4 class="font-bold text-lg text-white">{{ r.name }}</h4>
-                            <span class="text-xs text-gray-500 font-mono bg-gray-800 px-1 rounded">{{ r.updatedAt }}</span>
+                            <span class="text-xs text-gray-500 font-mono bg-gray-800 px-1 rounded">{{
+                                formatTimestamp(r.updatedAt) }}</span>
                         </div>
                         <div class="flex gap-4 mt-1">
                             <span class="text-cyan-400 font-bold">{{ r.kg }} <small
@@ -95,15 +96,14 @@ const exerciseInput = ref('')
 const weightInput = ref()
 const unit = ref('kg')
 const editingId = ref<number | null>(null) // 追蹤目前正在編輯哪一筆
-const submitBtn = computed(() => editingId.value ? '更新重量紀錄' : '新增這組紀錄' )
+const submitBtn = computed(() => editingId.value ? '更新重量紀錄' : '新增這組紀錄')
 
 //渲染資料
 const records = ref<GymRecord[]>(JSON.parse(localStorage.getItem('gym_records') ?? '[]'))
 const filtered = computed(() =>
-    [...records.value] 
-    .filter(r => r.category == part)
-    .sort((a, b) => b.updatedAt - a.updatedAt)
-    .map(r =>  ({...r, updatedAt: formatTimestamp(r.updatedAt)}))
+    [...records.value]
+        .filter(r => r.category == part)
+        .sort((a, b) => b.updatedAt - a.updatedAt)
 )
 
 interface GymRecord {
@@ -116,20 +116,24 @@ interface GymRecord {
 }
 
 const formatTimestamp = (ts: number) => {
-  return new Intl.DateTimeFormat('zh-TW', {
-    month: 'numeric',
-    day: 'numeric'
-  }).format(ts); // 產出 "1/12" 日期格式
+    return new Intl.DateTimeFormat('zh-TW', {
+        month: 'numeric',
+        day: 'numeric'
+    }).format(ts); // 產出 "1/12" 日期格式
 }
 
+const isProcessing = ref(false) // 防止重複點擊
+
 const saveRecord = () => {
+    if (isProcessing.value) return
     setTimeout(() => {
-        const updatedAt = Date.now();
-        if (!exerciseInput.value || isNaN(weightInput.value)) {
+
+        if (!exerciseInput.value || !weightInput.value) {
             alert('請填寫完整動作與重量');
             return;
         }
-
+        isProcessing.value = true
+        const updatedAt = Date.now();
         let kg: number, lb: number;
         if (unit.value === 'kg') {
             kg = +(weightInput.value.toFixed(1));
@@ -158,6 +162,7 @@ const saveRecord = () => {
 
         localStorage.setItem('gym_records', JSON.stringify(records.value));
         resetForm();
+        isProcessing.value = false
     }, 150);
 }
 
