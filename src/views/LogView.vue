@@ -41,8 +41,15 @@
                     <div class="flex-1">
                         <div class="flex items-center gap-2">
                             <h4 class="font-bold text-lg text-white">{{ r.name }}</h4>
-                            <span class="text-xs text-gray-500 font-mono bg-gray-800 px-1 rounded">{{
-                                formatTimestamp(r.updatedAt) }}</span>
+                            <div class="flex items-center gap-1.5 ml-auto">
+                                <span class="relative flex h-2 w-2">
+                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                                </span>
+                                <span class="text-xs font-mono text-gray-300 leading-none">
+                                    {{ formatTimestamp(r.updatedAt) }}
+                                </span>
+                            </div>
                         </div>
                         <div class="flex gap-4 mt-1">
                             <span class="text-cyan-400 font-bold">{{ r.kg }} <small
@@ -51,7 +58,7 @@
                                     class="text-[10px] opacity-70">lb</small></span>
                         </div>
                     </div>
-                    <div class="flex gap-2">
+                    <div class="flex gap-2 ml-4">
                         <button @click="editRecord(r.id)" class="p-2">
                             <span
                                 class="icon-[pixelarticons--edit] text-xl text-gray-400 active:text-blue-400 align-middle"></span>
