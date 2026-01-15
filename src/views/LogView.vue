@@ -43,19 +43,25 @@
                             <h4 class="font-bold text-lg text-white">{{ r.name }}</h4>
                             <div class="flex items-center gap-1.5 ml-auto">
                                 <span class="relative flex h-2 w-2">
-                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                                    <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                                    <span
+                                        class="animate-ping absolute inline-flex h-full w-full rounded-full  opacity-75"
+                                        :class="isThisWeek(r.updatedAt) ? 'bg-green-400' : 'bg-gray-400'"></span>
+                                    <span class="relative inline-flex rounded-full h-2 w-2"
+                                        :class="isThisWeek(r.updatedAt) ? 'bg-green-500' : 'bg-gray-500'"></span>
                                 </span>
-                                <span class="text-xs font-mono text-gray-300 leading-none">
+                                <span @click="isThisWeek(r.updatedAt)"
+                                    class="text-xs font-mono text-gray-300 leading-none">
                                     {{ formatTimestamp(r.updatedAt) }}
                                 </span>
                             </div>
                         </div>
                         <div class="flex gap-4 mt-1">
-                            <span class="text-cyan-400 font-bold">{{ r.kg }} <small
-                                    class="text-[10px] opacity-70">kg</small></span>
-                            <span class="text-amber-400 font-bold">{{ r.lb }} <small
-                                    class="text-[10px] opacity-70">lb</small></span>
+                            <span class="text-cyan-400 font-bold flex-[0.25]">{{ r.kg }}
+                                <small class="text-[10px] opacity-70">kg</small>
+                            </span>
+                            <span class="text-amber-400 font-bold flex-[0.25]">{{ r.lb }}
+                                <small class="text-[10px] opacity-70">lb</small>
+                            </span>
                         </div>
                     </div>
                     <div class="flex gap-2 ml-4">
@@ -122,6 +128,21 @@ interface GymRecord {
     updatedAt: number;
 }
 
+//時間顯示邏輯
+const isThisWeek = (recordMs: number) => {
+    if (!recordMs) return false;
+
+    const now = Date.now();
+
+    // 計算相差的毫秒數
+    const diffInMs = now - recordMs;
+
+    // 定義 7 天的毫秒數
+    const sevenDaysInMs = 7 * 24 * 60 * 60 * 1000;
+
+    return diffInMs >= 0 && diffInMs <= sevenDaysInMs
+}
+
 const formatTimestamp = (ts: number) => {
     return new Intl.DateTimeFormat('zh-TW', {
         month: 'numeric',
@@ -129,6 +150,7 @@ const formatTimestamp = (ts: number) => {
     }).format(ts); // 產出 "1/12" 日期格式
 }
 
+//儲存按鈕
 const isProcessing = ref(false) // 防止重複點擊
 
 const saveRecord = () => {
