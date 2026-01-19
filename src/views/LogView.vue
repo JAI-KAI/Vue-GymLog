@@ -55,11 +55,11 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="flex gap-4 mt-1">
-                            <span class="text-cyan-400 font-bold flex-[0.25]">{{ r.kg }}
+                        <div class="flex mt-1">
+                            <span class="text-cyan-400 font-bold flex-[0.3]">{{ r.kg }}
                                 <small class="text-[10px] opacity-70">kg</small>
                             </span>
-                            <span class="text-amber-400 font-bold flex-[0.25]">{{ r.lb }}
+                            <span class="text-amber-400 font-bold flex-[0.3]">{{ r.lb }}
                                 <small class="text-[10px] opacity-70">lb</small>
                             </span>
                         </div>
