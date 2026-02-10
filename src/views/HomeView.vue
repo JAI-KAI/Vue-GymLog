@@ -15,7 +15,8 @@ const parts = [
   { id: 'chest', label: '胸部訓練', icon: 'icon-[icon-park-outline--chest]' },
   { id: 'back', label: '背部訓練', icon: 'icon-[hugeicons--back-muscle-body]' },
   { id: 'legs', label: '腿部訓練', icon: 'icon-[hugeicons--body-part-leg]' },
-  { id: 'function', label: '功能性/核心訓練', icon: 'icon-[hugeicons--body-part-six-pack]' }
+  { id: 'shoulder', label: '肩部訓練', icon: 'icon-[hugeicons--shoulder]' },
+  { id: 'abdominals', label: '腹部訓練', icon: 'icon-[hugeicons--body-part-six-pack]' }
 ];
 
 </script>

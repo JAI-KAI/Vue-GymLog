@@ -85,7 +85,8 @@ const categoryMap: Record<string, string> = {
     chest: '胸部訓練',
     back: '背部訓練',
     legs: '腿部訓練',
-    function: '功能性/核心訓練'
+    shoulder: '肩部訓練',
+    abdominals: '腹部訓練'
 }
 const currentLabel = categoryMap[part] || '未知部位'
 
